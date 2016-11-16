@@ -20,7 +20,9 @@ var Game = (function () {
     Game.prototype.getInterval = function getInterval(){
         // Increase game speed logarithmically
         // This is a little arbitrary right now.
-        return Math.floor(10000 / Math.log(this.points));
+        return Math.floor(
+            1000 - Math.log(this.points + 1) // +1 to prevent infinity
+        );
     };
     Game.prototype.tick = function tick(){
         // Hold onto our context
