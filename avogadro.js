@@ -11,9 +11,26 @@ var Game = (function () {
     }
     Game.prototype.reset = function () {
         this.paused = true;
+        this.timeoutId = null;
+        this.points = 0;
         this.board = this.initializeBoard(this.boardSize);
         this.initializeGame();
         this.togglePause(this.paused);
+    };
+    Game.prototype.getInterval = function getInterval(){
+        // Increase game speed logarithmically
+        // This is a little arbitrary right now.
+        return Math.floor(10000 / Math.log(this.points));
+    };
+    Game.prototype.tick = function tick(){
+        // Hold onto our context
+        var game = this;
+
+        if (!game.paused) {
+            this.timeoutId = setTimeout(function(){
+                game.tick();
+            }, game.getInterval());
+        }
     };
     Game.prototype.initializeBoard = function initializeBoard(boardSize) {
         var newBoard = [];
@@ -34,7 +51,7 @@ var Game = (function () {
         this.startButton.textContent = state ? 'Stop' : 'Start'
     };
     Game.prototype.initializeGame = function initializeGame() {
-
+        var game = this;
         var container = document.createElement('div');
         container.classList.add('container');
 
@@ -62,6 +79,7 @@ var Game = (function () {
                 cell.classList.add('cell');
                 cell.dataset.row = rowIndex;
                 cell.dataset.col = colIndex;
+                cell.style.width = (100 / game.boardSize) + '%';
                 row.appendChild(cell);
             });
             board.appendChild(row);
