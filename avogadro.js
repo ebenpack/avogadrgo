@@ -12,6 +12,7 @@ var Game = (function () {
     Game.prototype.reset = function () {
         this.paused = true;
         this.board = this.initializeBoard(this.boardSize);
+        this.initializeGame();
         this.togglePause(this.paused);
     };
     Game.prototype.initializeBoard = function initializeBoard(boardSize) {
@@ -30,6 +31,46 @@ var Game = (function () {
             state = !(this.paused);
         }
         this.paused = state;
+        this.startButton.textContent = state ? 'Stop' : 'Start'
+    };
+    Game.prototype.initializeGame = function initializeGame() {
+
+        var container = document.createElement('div');
+        container.classList.add('container');
+
+        var startButton = document.createElement('button');
+        startButton.textContent = 'Start';
+        startButton.classList.add('start');
+        this.startButton = startButton;
+
+        var resetButton = document.createElement('button');
+        resetButton.textContent = 'Reset';
+        resetButton.classList.add('reset');
+
+        var board = document.createElement('div');
+        board.classList.add('board');
+        board.addEventListener('click', function (evt) {
+            console.log(evt.target)
+        });
+
+
+        this.board.forEach(function (r, rowIndex) {
+            var row = document.createElement('div');
+            row.classList.add('row')
+            r.forEach(function (c, colIndex) {
+                var cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.row = rowIndex;
+                cell.dataset.col = colIndex;
+                row.appendChild(cell);
+            });
+            board.appendChild(row);
+        });
+
+        container.appendChild(board);
+        container.appendChild(startButton);
+        container.appendChild(resetButton);
+        this.element.appendChild(container);
     };
     return Game;
 })();
