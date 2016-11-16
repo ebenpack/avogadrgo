@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 960px;
+    width: 100%;
+}
+
+.start {
+}
+
+.reset {
+}
+
+.board {
+    width: 100%;
+}
+
+.cell {
+    float: left;
+    border: 6px solid #222;
+}
+
+.cell::after {
+    /* http://stackoverflow.com/questions/19068070/how-to-style-a-div-to-be-a-responsive-square#answer-28985475 */
+    content: '';
+    display: block;
+    margin-top: 100%;
+}
+
+.cell {
+    border: 6px solid #222;
+}
