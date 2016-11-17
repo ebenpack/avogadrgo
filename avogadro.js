@@ -15,6 +15,10 @@ var Game = (function () {
         this.timeoutId = null;
         this.points = 0;
         this.chance = 0.9; // Set this arbitrarily for now
+        // Empty container
+        while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
+        }
         this.board = this.initializeBoard(this.boardSize);
         this.initializeGame();
         this.togglePause(this.paused);
@@ -34,19 +38,19 @@ var Game = (function () {
         }
     };
     Game.prototype.toggleCell = function toggleCell(row, col, active) {
-        if (typeof state !== 'undefined') {
-            active = !this.board[row][col].active;
+        if (typeof active === 'undefined') {
+            active = this.board[row][col].active;
         }
-        this.board[row][col].active = active;
-        if (active) {
-            this.board[row][col].element.children[0].classList.add('active');
+        if (!active) {
+            this.board[row][col].mole.classList.add('active');
         } else {
-            this.board[row][col].element.children[0].classList.remove('active');
+            this.board[row][col].mole.classList.remove('active');
         }
+        this.board[row][col].active = !active;
     };
     Game.prototype.updateCell = function updateCell(row, col) {
-        if (!this.board[row][col].active && Math.random() > this.chance) {
-            this.toggleCell(row, col, true);
+        if (Math.random() > this.chance) {
+            this.toggleCell(row, col);
         }
     };
     Game.prototype.tick = function tick() {
@@ -81,10 +85,29 @@ var Game = (function () {
             state = !(this.paused);
         }
         this.paused = state;
-        this.startButton.textContent = state ? 'Stop' : 'Start'
+        this.startButton.textContent = state ? 'Start' : 'Stop'
+    };
+    Game.prototype.updatePoints = function updatePoints(){
+        this.pointsElement.textContent = this.points;
+    };
+    Game.prototype.handleClick = function handleClick(target){
+        if (!this.paused) {
+            // Check for a hit
+            if (target.classList.contains('mole')) {
+                // A most palpable hit
+                this.points += 1;
+                var row = target.parentElement.dataset.row;
+                var col = target.parentElement.dataset.col;
+                this.toggleCell(row, col, true);
+                this.updatePoints();
+            } else {
+                // May want to register misses
+            }
+        }
     };
     Game.prototype.initializeGame = function initializeGame() {
         var game = this;
+
         var container = document.createElement('div');
         container.classList.add('container');
 
@@ -99,26 +122,38 @@ var Game = (function () {
         var resetButton = document.createElement('button');
         resetButton.textContent = 'Reset';
         resetButton.classList.add('reset');
+        resetButton.addEventListener('click', function(){
+            game.reset();
+        });
+        this.resetButton = resetButton;
+
+        var pointsElement = document.createElement('div');
+        pointsElement.textContent = '0';
+        pointsElement.classList.add('points');
+        this.pointsElement = pointsElement;
 
         var board = document.createElement('div');
         board.classList.add('board');
         board.addEventListener('click', function (evt) {
-            console.log(evt.target)
+            game.handleClick(evt.target);
         });
 
 
         this.board.forEach(function (r, rowIndex) {
             var row = document.createElement('div');
-            row.classList.add('row')
+            row.classList.add('row');
             r.forEach(function (c, colIndex) {
                 var cell = document.createElement('div');
                 cell.classList.add('cell');
                 cell.style.width = (100 / game.boardSize) + '%';
+                cell.dataset.row = rowIndex;
+                cell.dataset.col = colIndex;
                 var mole = document.createElement('div');
                 mole.classList.add('mole');
                 cell.appendChild(mole);
                 row.appendChild(cell);
-                c.element = cell;
+                c.cell = cell;
+                c.mole = mole;
             });
             board.appendChild(row);
         });
@@ -126,7 +161,9 @@ var Game = (function () {
         container.appendChild(board);
         container.appendChild(startButton);
         container.appendChild(resetButton);
+        container.appendChild(pointsElement);
         this.element.appendChild(container);
     };
     return Game;
+
 })();
