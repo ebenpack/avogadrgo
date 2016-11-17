@@ -9,27 +9,56 @@ var Game = (function () {
         this.element = element;
         this.reset();
     }
+
     Game.prototype.reset = function () {
         this.paused = true;
         this.timeoutId = null;
         this.points = 0;
+        this.chance = 0.9; // Set this arbitrarily for now
         this.board = this.initializeBoard(this.boardSize);
         this.initializeGame();
         this.togglePause(this.paused);
     };
-    Game.prototype.getInterval = function getInterval(){
+    Game.prototype.getInterval = function getInterval() {
         // Increase game speed logarithmically
         // This is a little arbitrary right now.
         return Math.floor(
             1000 - Math.log(this.points + 1) // +1 to prevent infinity
         );
     };
-    Game.prototype.tick = function tick(){
+    Game.prototype.toggleStart = function toggleStart() {
+        this.paused = !this.paused;
+        this.timeoutId = null;
+        if (!this.paused) {
+            this.tick();
+        }
+    };
+    Game.prototype.toggleCell = function toggleCell(row, col, active) {
+        if (typeof state !== 'undefined') {
+            active = !this.board[row][col].active;
+        }
+        this.board[row][col].active = active;
+        if (active) {
+            this.board[row][col].element.children[0].classList.add('active');
+        } else {
+            this.board[row][col].element.children[0].classList.remove('active');
+        }
+    };
+    Game.prototype.updateCell = function updateCell(row, col) {
+        if (!this.board[row][col].active && Math.random() > this.chance) {
+            this.toggleCell(row, col, true);
+        }
+    };
+    Game.prototype.tick = function tick() {
         // Hold onto our context
         var game = this;
-
         if (!game.paused) {
-            this.timeoutId = setTimeout(function(){
+            for (var rowIndex = 0; rowIndex < game.boardSize; rowIndex++) {
+                for (var colIndex = 0; colIndex < game.boardSize; colIndex++) {
+                    game.updateCell(rowIndex, colIndex);
+                }
+            }
+            this.timeoutId = setTimeout(function () {
                 game.tick();
             }, game.getInterval());
         }
@@ -39,7 +68,9 @@ var Game = (function () {
         for (var i = 0; i < boardSize; i++) {
             var row = [];
             for (var j = 0; j < boardSize; j++) {
-                row.push(false);
+                row.push({
+                    active: false
+                });
             }
             newBoard.push(row);
         }
@@ -60,6 +91,9 @@ var Game = (function () {
         var startButton = document.createElement('button');
         startButton.textContent = 'Start';
         startButton.classList.add('start');
+        startButton.addEventListener('click', function(){
+            game.toggleStart();
+        });
         this.startButton = startButton;
 
         var resetButton = document.createElement('button');
@@ -79,10 +113,12 @@ var Game = (function () {
             r.forEach(function (c, colIndex) {
                 var cell = document.createElement('div');
                 cell.classList.add('cell');
-                cell.dataset.row = rowIndex;
-                cell.dataset.col = colIndex;
                 cell.style.width = (100 / game.boardSize) + '%';
+                var mole = document.createElement('div');
+                mole.classList.add('mole');
+                cell.appendChild(mole);
                 row.appendChild(cell);
+                c.element = cell;
             });
             board.appendChild(row);
         });

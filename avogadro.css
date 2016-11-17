@@ -3,7 +3,7 @@
 }
 
 .container {
-    max-width: 960px;
+    max-width: 760px;
     width: 100%;
 }
 
@@ -20,6 +20,8 @@
 .cell {
     float: left;
     border: 6px solid #222;
+    position: relative;
+    overflow: hidden;
 }
 
 .cell::after {
@@ -27,4 +29,24 @@
     content: '';
     display: block;
     margin-top: 100%;
+}
+
+.mole {
+    position: absolute;
+    width: 100%;
+    margin-bottom: 100%;
+    -webkit-transition: -webkit-transform 2s;
+    transition: transform 2s;
+    transform: translate(0, 100%);
+}
+
+.mole::after {
+    content: '';
+    display: block;
+    margin-top: 100%;
+}
+
+.mole.active {
+    background-color: red;
+    transform: translate(0, 0);
 }
