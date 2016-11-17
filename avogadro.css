@@ -19,9 +19,12 @@
 
 .cell {
     float: left;
-    border: 6px solid #222;
     position: relative;
     overflow: hidden;
+    background-image:url('hole-back.png');
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position:center;
 }
 
 .cell::after {
@@ -31,6 +34,14 @@
     margin-top: 100%;
 }
 
+.hole-mask {
+    width: 100%;
+    z-index: 10;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
 .mole {
     position: absolute;
     width: 100%;
@@ -38,6 +49,10 @@
     -webkit-transition: -webkit-transform 2s;
     transition: transform 2s;
     transform: translate(0, 100%);
+    background-image:url('avo1.png');
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position:center;
 }
 
 .mole::after {
@@ -46,7 +61,10 @@
     margin-top: 100%;
 }
 
+.mole.whacked {
+    background-image:url('avo2.png');
+}
+
 .mole.active {
-    background-color: red;
     transform: translate(0, 0);
 }
