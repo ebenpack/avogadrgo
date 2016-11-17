@@ -21,7 +21,7 @@
     float: left;
     position: relative;
     overflow: hidden;
-    background-image:url('hole-back.png');
+    background-image:url('assets/hole-back.png');
     background-repeat:no-repeat;
     background-size:contain;
     background-position:center;
@@ -49,7 +49,7 @@
     -webkit-transition: -webkit-transform 2s;
     transition: transform 2s;
     transform: translate(0, 100%);
-    background-image:url('avo1.png');
+    background-image:url('assets/avo1.png');
     background-repeat:no-repeat;
     background-size:contain;
     background-position:center;
@@ -62,7 +62,7 @@
 }
 
 .mole.whacked {
-    background-image:url('avo2.png');
+    background-image:url('assets/avo2.png');
 }
 
 .mole.active {

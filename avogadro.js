@@ -175,7 +175,7 @@ var Game = (function () {
 
                 var mask = document.createElement('img');
                 mask.classList.add('hole-mask');
-                mask.src = 'hole-bot.png';
+                mask.src = 'assets/hole-bot.png';
 
                 cell.appendChild(mole);
                 cell.appendChild(mask);
