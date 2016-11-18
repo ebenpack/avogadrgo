@@ -61,9 +61,14 @@ button:hover {
 .hole-mask {
     width: 100%;
     z-index: 10;
+    padding-bottom: 100%;
     position: absolute;
     bottom: 0;
     left: 0;
+    background-image:url('assets/hole-bot.png');
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position:bottom;
 }
 
 .mole {
