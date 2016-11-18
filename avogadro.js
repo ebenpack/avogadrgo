@@ -173,8 +173,9 @@ var Game = (function () {
                 var mole = document.createElement('div');
                 mole.classList.add('mole');
 
-                var mask = document.createElement('div');
+                var mask = document.createElement('img');
                 mask.classList.add('hole-mask');
+                mask.src = 'assets/hole-bot.png';
 
                 cell.appendChild(mole);
                 cell.appendChild(mask);
